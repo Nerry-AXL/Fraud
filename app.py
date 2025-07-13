@@ -1,10 +1,14 @@
 import streamlit as st
 import tensorflow as tf 
-from tf.keras.models import load_model
 import numpy as np
 
 # Load the trained model
-model = load_model("fraud_model.h5")
+try:
+    model = tf.keras.models.load_model("fraud_model.h5")  # type: ignore
+except:
+    # Fallback for different TensorFlow versions
+    import keras
+    model = keras.models.load_model("fraud_model.h5")
 
 # Set up page config
 st.set_page_config(page_title="Online Fraud Detection", layout="centered")
@@ -55,7 +59,7 @@ if submit:
                             type_val, nameOrig_sum, nameDest_sum]])
 
     # Predict
-    prediction = model.predict(input_data)[0][0]
+    prediction = model.predict(input_data)[0][0]  # type: ignore
 
     # Display result
     st.markdown("---")
